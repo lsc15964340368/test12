@@ -1,0 +1,221 @@
+
+
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!--字体图标-->
+    <link href="/pc/css/icomoon.css" rel="stylesheet" />
+    <!--动画-->
+    <link href="/pc/css/animate.css" rel="stylesheet" />
+    <!--骨架样式-->
+    <link href="/pc/css/common.css" rel="stylesheet" />
+    <!--皮肤（缇娜）-->
+    <link href="/pc/css/skin/tina.css" rel="stylesheet" />
+    <!--jquery，不可修改版本-->
+    <script src="/pc/lib/jquery-1.7.2.min.js"></script>
+    <!--全局动态修改-->
+    <script src="/pc/js/common.js"></script>
+    <!--核心组件-->
+    <script src="/pc/js/javaex.min.js"></script>
+    <!--表单验证-->
+    <script src="/pc/js/javaex-formVerify.js"></script>
+    <title>Title</title>
+
+    <style>
+        .enlargeImg_wrapper {
+            display: none;
+            position: fixed;
+            z-index: 999;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: center;
+            background-color: rgba(52, 52, 52, 0.8);
+            background-size: 50%;
+        }
+        img:hover {
+            cursor: zoom-in;
+        }
+        .enlargeImg_wrapper:hover {
+            cursor: zoom-out;
+        }
+        body {font-family: Arial, Helvetica, sans-serif; font-size:12px; text-align:center;}
+        a { text-decoration: none;}
+        #all {widht: 100%; text-align:center; margin:auto;}
+        #main {width: 96%; line-height: 1.8; margin:auto; border:1px #ccc dashed; text-align: left; text-indent: 2em;}
+        #t1{height: 30px}
+    </style>
+    <script type="text/javascript" src="/js/jquery-1.11.1.min.js"></script>
+</head>
+<body>
+<!--主体内容-->
+
+<!--主体内容-->
+<div id="mmm" class="list-content">
+    <!--块元素-->
+    <div class="block">
+        <!--页面有多个表格时，可以用于标识表格-->
+        <h2>订单详情页</h2>
+        <!--右上角的返回按钮-->
+        <a href="javascript:history.back();">
+            <button id="b1" class="button indigo radius-3" style="position: absolute;right: 20px;top: 16px;"><span class="icon-arrow_back"></span> 返回</button>
+        </a>
+
+        <!--正文内容-->
+        <div class="main">
+            <!--表格上方的搜索操作-->
+            <div class="admin-search">
+                <div class="input-group">
+                </div>
+            </div>
+
+            <!--表格上方的操作元素，添加、删除等-->
+            <div class="operation-wrap">
+                <div class="buttons-wrap">
+                    <span th:if="${session.finish}==''">
+                        <a href="#" id="d1"><button style="background-color:skyblue;width: 80px;height: 35px;border-radius: 5px">新建详情单</button></a>
+                        <a href="#" id="d2"><button style="background-color:sandybrown;width: 60px;height: 35px;border-radius: 5px">一键支付</button></a>
+                    </span>
+                </div>
+            </div>
+            <table id="table" class="table color2">
+                <thead>
+                <tr>
+                    <th>子订单编号</th>
+                    <th>订单编号</th>
+                    <th>品牌</th>
+                    <th>单价</th>
+                    <th>数量</th>
+                    <span th:if="${session.finish}==''">
+                        <th>操作</th>
+                    </span>
+                </tr>
+                </thead>
+                <tbody>
+                <span th:each="log_car,num:${log_n}">
+                    <tr id="h1">
+                        <td th:text="${log_car.loglid}">${log_car.log_l_id}</td>
+                        <td th:text="${log_car.logid}">${log_car.log_id}</td>
+                        <td th:text="${log_car.carbrand}">${log_car.car_brand}</td>
+                        <td th:text="${log_car.carprice}">${log_car.car_price}万</td>
+                        <td th:text="${log_car.carnum}">${log_car.car_num}辆</td>
+                    <input id="h" type="text" style="display: none" th:value="${session.logid}"/>
+                        <input th:id="'f_'+${num.count}" id="f_${sessionScope.y}" name="${log_car.log_id}" style="display: none" th:value="${log_car.loglid}"/>
+                        <input th:id="'o_'+${num.count}" id="o_${sessionScope.y}" name="${log_car.log_id}" style="display: none" th:value="${log_car.logid}"/>
+                        <input th:id="'i_'+${num.count}" id="i_${sessionScope.y}" name="${log_car.log_id}" style="display: none" th:value="${log_car.carbrand}"/>
+                        <input th:id="'k_'+${num.count}" id="k_${sessionScope.y}" name="${log_car.log_id}" style="display: none" th:value="${log_car.carprice}"/>
+                        <input th:id="'t_'+${num.count}" id="t_${sessionScope.y}" name="${log_car.log_id}" style="display: none" th:value="${log_car.carnum}"/>
+                    <span th:if="${session.finish}==''">
+                            <td><button th:id="'d_'+${num.count}" id="d_${sessionScope.y}"  style="background-color: tomato;width: 35px;height: 30px;border-radius: 5px">编辑</button>&nbsp;&nbsp;&nbsp;<button th:id="'l_'+${num.count}" id="l_${sessionScope.y}" style="background-color: greenyellow;width: 35px;height: 30px;border-radius: 5px">删除</button></td>
+                    </span>
+                    </tr>
+                </span>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div>
+        当前第<span th:text="${page3.pageNum}"></span> 页&nbsp;&nbsp;&nbsp;共<span th:text=" ${page3.pages}"></span></span> 页
+        <span th:if="${page3.pageNum!=1}">
+            &nbsp;&nbsp;<a id="a12" href="#" th:href="@{'/querylog?page='+${page3.prePage}+'&logid='+${session.logid}}">上一页</a>
+        </span>
+
+        <span th:if="${page3.pageNum<page3.pages}">
+            &nbsp;&nbsp;<a id="a11"  href="#" th:href="@{'/querylog?page='+${page3.nextPage}+'&logid='+${session.logid}}">下一页</a>
+        </span>
+        <i style="text-align: right;float: right">共<span th:text="${page3.total}"></span> 条</i>
+    </div>
+</div>
+
+</div>
+</body>
+
+<script>
+    $(function () {
+
+        $("#d1").click(function () {
+            javaex.dialog({
+                type: "dialog",	// 弹出层类型
+                width: "500",
+                height: "500",
+                url: "addlog_l1"
+            });
+        });
+    });
+    $(function () {
+        var arr = [];
+
+        Array.prototype.range = function ( start,end ){
+            var _self = this;
+            var length = end - start +1;
+            var step = start - 1;
+            return Array.apply(null,{length:length}).map(function (v,i){step++;return step;});
+        }
+        for (let m in  arr.range(1,6)) {
+            $("#d_" + m).click(function () {
+                var log_l_id=$("#f_"+m).val();
+                var log_id=$("#o_"+m).val();
+                var car_brand=$("#i_"+m).val();
+                var car_num=$("#t_"+m).val();
+                $.post("setlog_l",
+                    {loglid:log_l_id,logid:log_id,carbrand:car_brand,carnum:car_num},
+                    function (data) {
+                        if(data.success){
+                            javaex.dialog({
+                                type: "dialog",	// 弹出层类型
+                                width: "500",
+                                height: "600",
+                                url: "setlog_l1"
+                            });
+                        }else{
+                            alert("获取失败");
+                        }
+                    },"json"
+                )
+
+            });
+            $("#l_" + m).click(function () {
+                var log_l_id = $("#f_"+ m).val();
+                var logid=$("#h").val();
+                $.post("deletelog_l",
+                    {loglid: log_l_id},
+                    function (data) {
+                        if (data.success) {
+                            alert("删除成功")
+                            window.location.href ="querylog_l?logid="+logid;
+                        }
+                    },"json"
+                )
+            })
+        }
+    })
+    $(function () {
+        $("#d2").click(function () {
+            var arr = [];
+            Array.prototype.range = function ( start,end ){
+                var _self = this;
+                var length = end - start +1;
+                var step = start - 1;
+                return Array.apply(null,{length:length}).map(function (v,i){step++;return step;});
+            }
+            $.post("log_finish",
+                function (data) {
+                    if (data.success){
+                        alert("支付成功")
+                        location.href = "querylog"
+                    }else
+                    {
+                        alert("支付失败,订单为空或库存不足")
+                    }
+                },"json")
+        })
+    })
+
+</script>
+<script>
+    javaex.loading();
+</script>
+</html>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace => 命名空间-->
+<mapper namespace="com.oaec.car_text.dao.LogMapper">
+    <select id="querylog" resultType="log">
+        select * from log
+    </select>
+    <select id="log_username" resultType="user">
+        select * from user where username=#{logusername}
+    </select>
+    <insert id="addlog" >
+        insert into log value (#{logid},#{loguserid},#{logusername},#{loguseraddress},
+        #{loguserphone},#{mdate},#{mdate1},#{logcreateid},#{logcreatename},
+        #{logprice},#{logstatus})
+    </insert>
+    <update id="setlogusername" parameterType="String">
+        update log set logusername=#{logusername},loguserphone=#{loguserphone},loguseraddress=#{loguseraddress} where loguserid=#{loguserid}
+    </update>
+    <select id="querylog_l" parameterType="String" resultType="logl">
+        select * from logl where logid=#{logid}
+    </select>
+    <update id="setlog" parameterType="log">
+                update log set logusername=#{logusername} ,loguserid=#{loguserid},
+                loguserphone=#{loguserphone},mdate=#{mdate},loguseraddress=#{loguseraddress} where logid=#{logid}
+    </update>
+    <delete id="delete" parameterType="String">
+        delete from log where logid=#{logid}
+    </delete>
+    <delete id="deletelog_l" parameterType="String">
+        delete from logl where loglid=#{loglid}
+    </delete>
+    <delete id="deletelog_l1" parameterType="String">
+        delete from logl where logid=#{logid}
+    </delete>
+    <select id="likelog" parameterType="String" resultType="log">
+        select * from log
+        <where>
+            <choose>
+                <when test="_parameter!=null and _parameter!=''">
+                  and  logusername like concat('%',#{m},'%') or loguserphone like concat('%',#{m},'%') or loguseraddress like concat('%',#{m},'%')
+                    or logcreatename like concat('%',#{m},'%') or logstatus like concat('%',#{m},'%')
+                </when>
+                 <otherwise>
+                     and 1=1
+                 </otherwise>
+            </choose>
+        </where>
+    </select>
+    <select id="carbybrand" resultType="car" parameterType="String">
+        select * from car where carbrand=#{carbrand}
+    </select>
+    <insert id="addlog_l">
+        insert into logl values (#{loglid},#{logid},#{carbrand},#{carprice},#{carnum})
+    </insert>
+    <update id="setlog_l" parameterType="logl">
+        update logl set carbrand=#{carbrand},carprice=#{carprice},carnum=#{carnum} where loglid=#{loglid}
+    </update>
+    <update id="finish">
+        update log set logprice=#{logprice},logstatus=#{logstatus},mdate1=#{mdate1} where logid=#{logid}
+    </update>
+    <select id="querylogByLod_id" parameterType="String" resultType="log">
+        select * from log where logid=#{logid}
+    </select>
+<update id="setByBrand">
+    update car set carstock=carstock-#{carstock} where carbrand=#{carbrand}
+</update>
+</mapper>

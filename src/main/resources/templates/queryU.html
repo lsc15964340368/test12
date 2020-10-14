@@ -1,0 +1,121 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!--字体图标-->
+    <link href="/pc/css/icomoon.css" rel="stylesheet" />
+    <!--动画-->
+    <link href="/pc/css/animate.css" rel="stylesheet" />
+    <!--骨架样式-->
+    <link href="/pc/css/common.css" rel="stylesheet" />
+    <!--皮肤（缇娜）-->
+    <link href="/pc/css/skin/tina.css" rel="stylesheet" />
+    <!--jquery，不可修改版本-->
+    <script src="/pc/lib/jquery-1.7.2.min.js"></script>
+    <!--全局动态修改-->
+    <script src="/pc/js/common.js"></script>
+    <!--核心组件-->
+    <script src="/pc/js/javaex.min.js"></script>
+    <!--表单验证-->
+    <script src="/pc/js/javaex-formVerify.js"></script>
+    <title>Untitled Document</title>
+    <style type="text/css">
+        body {font-family: Arial, Helvetica, sans-serif; font-size:12px; text-align:center;}
+        a { text-decoration: none;}
+        #all {widht: 100%; text-align:center; margin:auto;}
+        #main {width: 96%; line-height: 1.8; margin:auto; border:1px #ccc dashed; text-align: left; text-indent: 2em;}
+        #t1{height: 30px}
+    </style>
+    <script type="text/javascript" src="/js/jquery-1.11.1.min.js"></script>
+
+</head>
+
+<body>
+<!--主体内容-->
+<div class="list-content">
+    <!--块元素-->
+    <div class="block">
+        <!--页面有多个表格时，可以用于标识表格-->
+        <h2>个人信息</h2>
+        <!--右上角的返回按钮-->
+        <a href="javascript:history.back();">
+            <button id="b1" class="button indigo radius-3" style="position: absolute;right: 20px;top: 16px;"><span class="icon-arrow_back"></span> 返回</button>
+        </a>
+
+        <!--正文内容-->
+        <div class="main">
+            <!--表格上方的搜索操作-->
+            <div class="admin-search">
+                <div class="input-group">
+                </div>
+            </div>
+
+            <!--表格上方的操作元素，添加、删除等-->
+            <div  class="operation-wrap">
+                <div class="buttons-wrap">
+                    <a href="#" id="d1"><button style="background-color:skyblue;width: 70px;height: 35px;border-radius: 5px">修改密码</button></a>
+                    <a href="queryRole" id="d2"><button  style="background-color:#FAC718;width: 70px;height: 35px;border-radius: 5px">查看角色</button></a>
+                    <a href="#" id="d3"><button style="background-color:chartreuse;width: 70px;height: 35px;border-radius: 5px">修改信息</button></a>
+                </div>
+            </div>
+            <div style="overflow-x:auto ">
+                <table  id="table" class="table color2">
+                    <thead>
+                    <tr>
+                        <th>用户id</th>
+                        <th>用户姓名</th>
+                        <th>用户电话</th>
+                        <th>用户地址</th>
+                        <th>用户类型</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <span th:each="list,num:${U}" >
+                        <tr id="h1">
+                            <td th:text="${list.id}">${list.id}</td><input style="display:none;" th:value="${list.id}" id="t1"/><input style="display:none;" th:value="${list.username}" id="t2"/><input style="display:none;" th:value="${list.userphone}" id="t3"/><input style="display:none;" th:value="${list.useraddress}" id="t4"/>
+                            <td th:text="${list.username}">${list.username}
+                            <td th:text="${list.userphone}">${list.user_phone}</td>
+                            <td th:text="${list.useraddress}">${list.user_address}</td>
+                            <td th:text="${list.userstatus}">${list.user_status}</td>
+                        </tr>
+                    </span>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</div>
+</body>
+<script>
+    $(function () {
+        $("#d1").click(function () {
+            javaex.dialog({
+                type: "dialog",	// 弹出层类型
+                width: "500",
+                height: "600",
+                url: "addU"
+            });
+        });
+        $("#d3").click(function () {
+            var id=$("#t1").val();
+            var username = $("#t2").val();
+            var user_phone = $("#t3").val();
+            var user_address = $("#t4" ).val();
+            $.post("setuser",
+                {id:id,username: username,userphone:user_phone,useraddress:user_address},
+            )
+            javaex.dialog({
+                type: "dialog",	// 弹出层类型
+                width: "500",
+                height: "400",
+                url: "setuser2"
+            });
+        });
+    })
+</script>
+<script>
+    javaex.loading();
+</script>
+</html>

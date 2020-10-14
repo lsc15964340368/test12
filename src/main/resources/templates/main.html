@@ -1,0 +1,193 @@
+﻿<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!--字体图标-->
+    <link href="/pc/css/icomoon.css" rel="stylesheet" />
+    <!--动画-->
+    <link href="/pc/css/animate.css" rel="stylesheet" />
+    <!--骨架样式-->
+    <link href="/pc/css/common.css" rel="stylesheet" />
+    <!--皮肤（缇娜）-->
+    <link href="/pc/css/skin/tina.css" rel="stylesheet" />
+    <!--jquery，不可修改版本-->
+    <script src="/pc/lib/jquery-1.7.2.min.js"></script>
+    <!--全局动态修改-->
+    <script src="/pc/js/common.js"></script>
+    <!--核心组件-->
+    <script src="/pc/js/javaex.min.js"></script>
+    <!--表单验证-->
+    <script src="/pc/js/javaex-formVerify.js"></script>
+    <title>Untitled Document</title>
+<style type="text/css">
+body {font-family: Arial, Helvetica, sans-serif; font-size:12px; text-align:center;}
+a { text-decoration: none;}
+#all {widht: 100%; text-align:center; margin:auto;}
+#main {width: 96%; line-height: 1.8; margin:auto; border:1px #ccc dashed; text-align: left; text-indent: 2em;}
+    #t1{height: 30px}
+</style>
+    <script type="text/javascript" src="/js/jquery-1.11.1.min.js"></script>
+</head>
+
+<body>
+<!--主体内容-->
+<div class="list-content">
+    <!--块元素-->
+    <div class="block">
+        <!--页面有多个表格时，可以用于标识表格-->
+        <h2>用户信息</h2>
+        <!--右上角的返回按钮-->
+        <a href="javascript:history.back();">
+            <button id="b1" class="button indigo radius-3" style="position: absolute;right: 20px;top: 16px;"><span class="icon-arrow_back"></span> 返回</button>
+        </a>
+
+        <!--正文内容-->
+        <div class="main">
+            <!--表格上方的搜索操作-->
+            <div class="admin-search">
+                <div class="input-group">
+                 <form action="/queryAllUser" method="post" >
+                    <input id="t1" type="text" name="m" placeholder="请输入" required=" "  autocomplete="off"/>
+                    <input  type="submit" style="height: 30px;width:50px;background-color: #94DCEB;border-radius: 5px"; value="搜索"/>
+                </form>
+                </div>
+            </div>
+            <!--表格上方的操作元素，添加、删除等-->
+            <div class="operation-wrap">
+                <div class="buttons-wrap">
+                        <a href="#" th:onclick="f()" id="d1"><button style="background-color:skyblue;width: 70px;height: 35px;border-radius: 5px">新建用户</button></a>
+                    <a href="exportExcel2"><button style="background-color:chartreuse;width: 70px;height: 35px;border-radius: 5px" >导出Excel</button></a>
+                </div>
+            </div>
+            <table id="table" class="table color2">
+                <thead>
+                <tr>
+                    <th>姓名</th>
+                    <th>手机号码</th>
+                    <th>用户类型</th>
+                    <th>地址</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <p th:each="list,num:${users}">
+                    <tr id="h1">
+                        <td th:text="${list.username}"></td>
+                        <td th:text="${list.userphone}"></td>
+                        <td th:text="${list.userstatus}">${list.user_status}</td>
+                        <td th:text="${list.useraddress}">${list.user_address}</td>
+                        <input th:id="'i_'+${num.count}" id="i_${sessionScope.m}" name="${list.id}" style="display: none" th:value="${list.id}"/>
+                        <input th:id="'k_'+${num.count}" id="k_${sessionScope.m}" name="${list.id}" style="display: none" th:value="${list.userphone}"/>
+                        <input th:id="'o_'+${num.count}" id="o_${sessionScope.m}" name="${list.id}" style="display: none" th:value="${list.useraddress}"/>
+                        <input th:id="'p_'+${num.count}" id="p_${sessionScope.m}" name="${list.id}" style="display: none" th:value="${list.username}"/>
+                        <td>
+                            <button th:id="'d_'+${num.count}" id="d_${sessionScope.m}"  style="background-color: tomato;width: 35px;height: 30px;border-radius: 5px">编辑</button>&nbsp;&nbsp;&nbsp;
+                            <button th:if="${session.user.id}!=${list.id}" th:id="'l_'+${num.count}" id="l_${sessionScope.m}" style="background-color: greenyellow;width: 35px;height: 30px;border-radius: 5px">删除</button>
+                            <select style="margin: 20px" th:id="'select'+${num.count}">
+                                <option value="">请选择角色</option>
+                                <option th:each="role,num1:${session.r1}" th:value="${num1.count}" th:text="${role.rolename}"></option>
+                            </select>
+                        </td>
+                    </tr>
+                </p>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div>
+        当前第<span th:text="${page.pageNum}"></span> 页&nbsp;&nbsp;&nbsp;共<span th:text=" ${page.pages}"></span></span> 页
+        <span th:if="${page.pageNum!=1}">
+            &nbsp;&nbsp;<a id="a12" href="#" th:href="@{'/queryAllUser?page='+${page.prePage}}">上一页</a>
+        </span>
+
+        <span th:if="${page.pageNum<page.pages}">
+            &nbsp;&nbsp;<a id="a11"  href="#" th:href="@{'/queryAllUser?page='+${page.nextPage}}">下一页</a>
+        </span>
+        <i style="text-align: right;float: right">共<span th:text="${page.total}"></span> 条</i>
+
+    </div>
+</div>
+
+</div>
+</body>
+<script>
+    function f() {
+        javaex.dialog({
+            type: "dialog",	// 弹出层类型
+            width: "500",
+            height: "400",
+            url: "adduser"
+        });
+    };
+    $(function () {
+        var arr = [];
+
+        Array.prototype.range = function (start, end) {
+            var _self = this;
+            var length = end - start + 1;
+            var step = start - 1;
+            return Array.apply(null, {length: length}).map(function (v, i) {
+                step++;
+                return step;
+            });
+        }
+        for (let m in arr.range(1,6)) {
+            $("#d_"+m).click(function () {
+                var id = $("#i_" + m).val();
+                var username = $("#p_" + m).val();
+                var userphone = $("#k_" + m).val();
+                var useraddress = $("#o_" + m).val();
+                $.post("setuser",
+                    {id: id, username: username, userphone: userphone, useraddress: useraddress},
+                function (data) {
+                    if (data.success){
+                        javaex.dialog({
+                            type: "dialog",	// 弹出层类型
+                            width: "500",
+                            height: "400",
+                            url: "setuser1"
+                        });
+                    }else {
+                        alert("获取失败");
+                    }
+                },"json")
+            });
+            $("#l_" + m).click(function () {
+                var id = $("#i_" + m).val();
+                $.post("deleteuser",
+                    {id: id},
+                    function (data) {
+                        if (data.success) {
+                            alert("删除成功")
+                            location.href = "queryAllUser"
+                        }
+                    }, "json"
+                )
+            })
+            javaex.select({
+                id: "select" + m,
+                isSearch: true,
+                // 回调函数
+                callback: function (rtn) {
+                    var userstatus = rtn.selectName;
+                    var id = $("#i_" + m).val();
+                    $.post("set_user_status",
+                        {id: id, userstatus: userstatus},
+                        function (data) {
+                            if (data.success) {
+                                alert("修改成功");
+                                location.href = "queryAllUser";
+                            } else {
+                                alert("修改失败");
+                            }
+                        }, "json"
+                    )
+                }
+            });
+
+        }
+    })
+</script>
+<script>
+    javaex.loading();
+</script>
+</html>

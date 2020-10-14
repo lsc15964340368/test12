@@ -1,0 +1,75 @@
+
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!--字体图标-->
+    <link href="/pc/css/icomoon.css" rel="stylesheet" />
+    <!--动画-->
+    <link href="/pc/css/animate.css" rel="stylesheet" />
+    <!--骨架样式-->
+    <link href="/pc/css/common.css" rel="stylesheet" />
+    <!--皮肤（缇娜）-->
+    <link href="/pc/css/skin/tina.css" rel="stylesheet" />
+    <!--jquery，不可修改版本-->
+    <script src="/pc/lib/jquery-1.7.2.min.js"></script>
+    <!--全局动态修改-->
+    <script src="/pc/js/common.js"></script>
+    <!--核心组件-->
+    <script src="/pc/js/javaex.min.js"></script>
+    <!--表单验证-->
+    <script src="/pc/js/javaex-formVerify.js"></script>
+    <title>Title</title>
+    <script type="text/javascript" src="/js/jquery-1.11.1.min.js"></script>
+    <script src="/js/jquery.cookie.js"></script>
+    <style>
+        a { text-decoration: none;}
+        #all {widht: 100%; text-align:center; margin:auto;}
+        #main {width: 96%; line-height: 1.8; margin:auto; border:1px #ccc dashed; text-align: left; text-indent: 2em;}
+        #m input{
+            width: 200px;height: 30px;}
+    </style>
+
+</head>
+<body>
+<div class="list-content">
+    <div class="block">
+        <h2>修改用户信息</h2>
+        <div class="operation-wrap">
+            <div class="buttons-wrap">
+                <form id="m" style="border: 1px lightgrey solid;text-align: center">
+                    <input id="a1" name="id" style="display: none" th:value="${session.set.id}"/>
+                    姓名：<input id="a2" style="margin: 20px" type="text" name="username" th:value="${session.set.username}"/><br/>
+                    电话：<input id="a3" style="margin: 20px"  type="text"  name="phone" th:value="${session.set.userphone}"/><br/>
+                    地址：<input id="a4" style="margin: 20px" type="text" name="address" th:value="${session.set.useraddress}"/><br/>
+                    <input  name="new" onclick="set();" type="submit" value="修改" style="height: 35px;width: 50px;background-color: dodgerblue;color:white;border-radius: 5px;"/>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</body>
+<script>
+    function set() {
+        var id=$("#a1").val();
+        var username=$("#a2").val();
+        var userphone=$("#a3").val();
+        var useraddress=$("#a4").val();
+        $.post("setuser3",
+            {id:id,username:username,userphone:userphone,useraddress:useraddress},
+            function (data) {
+                if(data.success){
+                    alert("修改成功");
+                    parent.location.href="queryAllUser"
+                }else{
+                    alert("修改失败");
+                }
+            },"json"
+        )
+    }
+</script>
+<script>
+    javaex.loading();
+</script>
+</html>
+

@@ -1,0 +1,99 @@
+
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Title</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!--字体图标-->
+    <link href="/pc/css/icomoon.css" rel="stylesheet" />
+    <!--动画-->
+    <link href="/pc/css/animate.css" rel="stylesheet" />
+    <!--骨架样式-->
+    <link href="/pc/css/common.css" rel="stylesheet" />
+    <!--皮肤（缇娜）-->
+    <link href="/pc/css/skin/tina.css" rel="stylesheet" />
+    <!--jquery，不可修改版本-->
+    <script src="/pc/lib/jquery-1.7.2.min.js"></script>
+    <!--全局动态修改-->
+    <script src="/pc/js/common.js"></script>
+    <!--核心组件-->
+    <script src="/pc/js/javaex.min.js"></script>
+    <!--表单验证-->
+    <script src="/pc/js/javaex-formVerify.js"></script>
+    <title>Title</title>
+    <script type="text/javascript" src="<%=Path%>/static/js/jquery-1.11.1.min.js"></script>
+    <script src="<%=Path%>/static/js/jquery.cookie.js"></script>
+    <style>
+        a { text-decoration: none;}
+        #all {widht: 100%; text-align:center; margin:auto;}
+        #main {width: 96%; line-height: 1.8; margin:auto; border:1px #ccc dashed; text-align: left; text-indent: 2em;}
+        #m input{
+            width: 200px;height: 30px;}
+    </style>
+
+</head>
+<body>
+<div class="list-content">
+    <div class="block">
+        <h2>修改密码</h2>
+        <div class="operation-wrap">
+            <div class="buttons-wrap">
+                <form id="m" style="border: 1px lightgrey solid;text-align: center">
+                    原密码：<input id="a2" style="margin: 20px" type="password" name="pwd" required=" "/><br/>
+                    新密码：<input id="a3" style="margin: 20px" type="password" name="pwd1" required=" "/><br/>
+                    确认密码：<input id="a4" style="margin: 20px" type="password" name="pwd2" required=" "/><br/>
+                    <input id="a1" name="new"  type="button" value="确认" style="text-align:center;height: 35px;width: 50px;background-color: dodgerblue;color:white;border-radius: 5px;"/>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</body>
+<script>
+    $(function () {
+        $("#a2").blur(function () {
+            var pwd=$("#a2").val();
+            $.post("pwd",
+                {pwd:pwd},
+                function (data) {
+                    if (data.success){
+                        return;
+                    } else{
+                        alert("原密码错误");
+                    }
+                },"json");
+        });
+        $("#a4").blur(function () {
+            var pwd1=$("#a3").val();
+            var pwd2=$("#a4").val();
+            $.post("reusername",
+                {pwd1:pwd1,pwd2:pwd2},
+                function (data) {
+                    if (data.success){
+                        return;
+                    } else{
+                        alert("两次密码不一致");
+                    }
+                },"json");
+        });
+        $("#a1").click(function () {
+            var pwd=$("#a3").val();
+            $.post("setpwd",
+                {pwd:pwd},
+                function (data) {
+                    if(data.success){
+                        alert("修改成功");
+                        parent.location.href="login.html";
+                    }else{
+                        alert("修改失败")
+                    }
+                },"json")
+        });
+    })
+</script>
+<script>
+    javaex.loading();
+</script>
+</html>
+
+</html>

@@ -1,0 +1,120 @@
+
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Title</title>
+    <!--字体图标-->
+    <link href="http://cdn.javaex.cn/javaex/pc/css/icomoon.css" rel="stylesheet" />
+    <!--动画-->
+    <link href="http://cdn.javaex.cn/javaex/pc/css/animate.css" rel="stylesheet" />
+    <!--骨架样式-->
+    <link href="http://cdn.javaex.cn/javaex/pc/css/common.css" rel="stylesheet" />
+    <!--皮肤-->
+    <link href="http://cdn.javaex.cn/javaex/pc/css/skin/default.css" rel="stylesheet" />
+    <!--jquery，不可修改版本-->
+    <script src="http://cdn.javaex.cn/javaex/pc/lib/jquery-1.7.2.min.js"></script>
+    <!--核心组件-->
+    <script src="http://cdn.javaex.cn/javaex/pc/js/javaex.min.js"></script>
+    <!--表单验证-->
+    <script src="http://cdn.javaex.cn/javaex/pc/js/javaex-formVerify.js"></script>
+</head>
+<body>
+<div class="javaex-block">
+    <h2 style="text-align: center;margin-top: 10px">权限信息</h2>
+    <hr class="javaex-divider"></hr>
+    <div class="javaex-list-toolbar clear">
+        <span class="fr">
+		</span>
+    </div>
+    <table id="table" class="javaex-table td-c-1 td-c-2">
+        <thead>
+        <tr>
+            <th>权限名称</th>
+            <th>权限URL</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <div th:each="power,num:${powers1}">
+        <tr>
+            <td th:id="'m_'+${num.count}" th:text="${power.powername }"></td>
+            <td th:text="${power.URL}"></td>
+            <input th:id="'p_'+${num.count}" th:value="${power.powerid}" style="display: none">
+            <input th:id="k" th:value="${session.rid}" style="display:none;">
+            <td >
+                <button th:id="'l_'+${num.count}"  th:unless="${session.powerid.contains(power.powerid)}" class="javaex-btn green"><span class="icon-check2"></span> 授权</button>
+                <button th:id="'d_'+${num.count}" th:if="${session.powerid.contains(power.powerid)}" class="javaex-btn red"><span class="icon-close2"></span> 取消</button>
+            </td>
+        </tr>
+            </div>
+        </tbody>
+    </table>
+
+</div>
+<div>
+    当前第<span th:text="${page5.pageNum}"></span> 页&nbsp;&nbsp;&nbsp;共<span th:text=" ${page5.pages}"></span></span> 页
+    <span th:if="${page5.pageNum!=1}">
+            &nbsp;&nbsp;<a id="a12"  href="#" th:href="@{'/querypower?page='+${page5.prePage}}">上一页</a>
+        </span>
+
+    <span th:if="${page5.pageNum<page5.pages}">
+            &nbsp;&nbsp;<a id="a11"  href="#" th:href="@{'/querypower?page='+${page5.nextPage}}">下一页</a>
+        </span>
+    <i style="text-align: right;float: right">共<span th:text="${page5.total}"></span> 条</i>
+</div>
+</body>
+<script>
+    $(function () {
+
+        var arr = [];
+        Array.prototype.range = function (start, end) {
+            var _self = this;
+            var length = end - start + 1;
+            var step = start - 1;
+            return Array.apply(null, {length: length}).map(function (v, i) {
+                step++;
+                return step;
+            });
+        }
+        for (let m in arr.range(1,26)) {
+            $("#l_"+m).click(function () {
+                var powerid=$("#p_"+m).val();
+                var role=$("#k").val();
+                $.post("addpower",
+                    {powerid:powerid},
+                    function (data) {
+                    if (data.status == 401){
+                        alert("权限不足");
+                        return;
+                    }
+                        if(data.success){
+                            alert("授权成功");
+                            location.href = "querypower?roleid="+role;
+                        }else {
+                            alert("授权失败");
+                        }
+                    },"json"
+                )
+            });
+            $("#d_"+m).click(function () {
+                var powerid=$("#p_"+m).val();
+                var role=$("#k").val();
+                $.post("deletepower",
+                    {powerid:powerid},
+                    function (data) {
+                        if(data.success){
+                            alert("取消成功");
+                            location.href = "querypower?roleid="+role;
+                        }else {
+                            alert("取消失败");
+                        }
+                    },"json"
+                )
+            });
+        }
+    })
+
+</script>
+<script>
+    javaex.loading();
+</script>
+</html>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace => 命名空间-->
+<mapper namespace="com.oaec.car_text.dao.CarMapper">
+<select id="queryCar" resultType="car">
+    select * from car
+</select>
+    <insert id="addCar">
+        insert into car value(#{carid},#{carimg},#{carbrand},
+        #{carprice},#{carcreateid},#{carcreatename},#{cartype},
+        #{carstock})
+    </insert>
+    <select id="likecar" resultType="car" >
+        select * from car
+        <where>
+        <choose>
+            <when test="_parameter!=null and _parameter!=''">
+                and carbrand like concat('%',#{m},'%') or cartype like concat('%',#{m},'%')
+                or carprice &lt;#{m}
+            </when>
+            <otherwise>
+                and 1=1
+            </otherwise>
+        </choose>
+        </where>
+    </select>
+    <delete id="deleteCar" parameterType="String">
+                delete from car where carid=#{carid}
+    </delete>
+    <select id="bybrand" parameterType="String" resultType="car">
+        select * from car where carbrand=#{carbrand}
+    </select>
+</mapper>

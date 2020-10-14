@@ -1,0 +1,128 @@
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>欢迎来到熊猫汽车交易</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="/js/jquery-1.11.1.min.js"></script>
+    <link href="/css/styles.css" rel="stylesheet" type="text/css" media="all" />
+    <script src="/js/jquery.cookie.js"></script>
+    <script>
+        $(function(){
+            if($.cookie("isChecked")){
+                $("#code").val($.cookie("user_code"));
+                $("#pwd").val($.cookie("password"));
+                $("#checkbox1").attr("checked",true);
+            }
+        });
+        function login() {
+            var usercode=$("#code").val();
+            var password=$("#pwd").val();
+            if(usercode.trim()==""||password.trim()==""){
+                alert("请输入用户名或密码");
+                return;
+            }
+            $.post("login",
+                {usercode:usercode,password:password},
+                function(data){
+                    if(data.success){
+                        if($("#checkbox1").is(":checked")){
+                            $.cookie("user_code",usercode,{expires:7});
+                            $.cookie("password",password,{expires:7});
+                            $.cookie("isChecked",true,{expires:7});
+                        }else{
+                            $.cookie("user_code",usercode,{expires:-1});
+                            $.cookie("password",password,{expires:-1});
+                            $.cookie("isChecked",true,{expires:-1});
+                        }
+
+                        location.href="index";
+                    }else {
+                        alert("用户名或密码错误");
+                    }
+                },"json");
+        }
+       $(function () {
+        $("#code1").blur(function () {
+            var user_code=$("#code1").val();
+            $.post("username",
+                {usercode:user_code},
+                function (data) {
+                    if (data.success){
+                        return;
+                    }else{
+                        alert("用户名已存在")
+                    }
+                },"json");
+        });
+       })
+        function regious() {
+            var user_code=$("#code1").val();
+            var password=$("#pwd1").val();
+            var username=$("#name").val();
+            var user_phone=$("#ph").val();
+            var user_address=$("#ad").val();
+            $.post("add",
+                {usercode:user_code,password:password,username:username,userphone:user_phone,useraddress:user_address},
+            function (data) {
+                if(data.success){
+                    alert("注册成功");
+                    location.href="login.html"
+                }
+            },"json")
+        }
+    </script>
+
+</head>
+<body>
+
+<div class="main">
+    <h1>汽车交易管理系统</h1>
+    <div class="w3_login">
+        <div class="w3_login_module">
+            <div class="module form-module">
+                <div class="toggle">
+                    <i class="fa fa-times fa-pencil"></i>
+                    <div class="tooltip">点击切换</div>
+                </div>
+                <div class="form">
+                    <h2>登录账号</h2>
+                    <form>
+                        <input type="text"id="code" name="user_code" placeholder="账号" required=" " />
+                        <input type="password"id="pwd" name="password" placeholder="密码" required=" " />
+                        <div class="main-checkbox">
+                            <input type="checkbox" value="None" id="checkbox1" name="check">
+                            <label for="checkbox1"></label>
+                            <span class="text">记住密码</span>
+                        </div>
+                    </form>
+                    <input type="submit" value="登录" onclick="login()"/>
+                </div>
+                <div class="form">
+                    <h2>注册账号</h2>
+                    <form>
+                        <input type="text" id="name" name="username" placeholder="用户名" required=" " />
+                        <input type="text"id="code1" name="user_code" placeholder="账号" required=" " />
+                        <input type="password" id="pwd1" name="password" placeholder="密码" required=" " />
+                        <input type="text"id="ph" name="phone" placeholder="电话" required=" " />
+                        <input type="text" id="ad" name="address" placeholder="地址"required=" ">
+                        <input type="submit" value="注册" onclick="regious()"/>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $('.toggle').click(function(){
+        $(this).children('i').toggleClass('fa-pencil');
+        $('.form').animate({height: "toggle",'padding-top': 'toggle','padding-bottom': 'toggle',opacity: "toggle"}, "slow");
+    });
+</script>
+</body>
+<script>
+    javaex.loading();
+</script>
+</html>

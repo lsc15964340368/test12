@@ -1,0 +1,96 @@
+
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Title</title>
+    <!--字体图标-->
+    <link href="http://cdn.javaex.cn/javaex/pc/css/icomoon.css" rel="stylesheet" />
+    <!--动画-->
+    <link href="http://cdn.javaex.cn/javaex/pc/css/animate.css" rel="stylesheet" />
+    <!--骨架样式-->
+    <link href="http://cdn.javaex.cn/javaex/pc/css/common.css" rel="stylesheet" />
+    <!--皮肤-->
+    <link href="http://cdn.javaex.cn/javaex/pc/css/skin/default.css" rel="stylesheet" />
+    <!--jquery，不可修改版本-->
+    <script src="http://cdn.javaex.cn/javaex/pc/lib/jquery-1.7.2.min.js"></script>
+    <!--核心组件-->
+    <script src="http://cdn.javaex.cn/javaex/pc/js/javaex.min.js"></script>
+    <!--表单验证-->
+    <script src="http://cdn.javaex.cn/javaex/pc/js/javaex-formVerify.js"></script>
+</head>
+<body>
+<div class="javaex-block">
+    <h2 style="text-align: center;margin-top: 10px">角色信息</h2>
+    <hr class="javaex-divider"></hr>
+    <div class="javaex-list-toolbar clear">
+        <span class="fl"><button id="d1" class="javaex-btn blue radius-3" onclick="edit()">添加角色</button></span>
+        <span class="fr">
+			<div class="javaex-search-group">
+			</div>
+		</span>
+    </div>
+    <table id="table" class="javaex-table td-c-1 td-c-2">
+        <thead>
+        <tr>
+            <th>角色名称</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <div th:each="role,num:${roleList}">
+            <tr>
+                <td th:id="'m_'+${num.count}" th:text="${role.rolename }"></td>
+                <input th:value="${role.roleid}" th:id="'h_'+${num.count}" style="display: none">
+                <td> <a th:href="@{'/querypower?roleid='+${role.roleid}}"> <button  th:id="'d_'+${num.count}"  style="background-color: tomato;width: 70px;height: 40px;border-radius: 5px">查看权限</button></a>&nbsp;&nbsp;&nbsp;
+                    <button th:id="'l_'+${num.count}" th:if="${role.rolecode}!=1"   style="background-color: greenyellow;width: 70px;height: 40px;border-radius: 5px">删除角色</button>
+                </td>
+            </tr>
+        </div>
+        </tbody>
+    </table>
+
+</div>
+</body>
+<script>
+
+    $(function () {
+        $("#d1").click(function () {
+            javaex.dialog({
+                type: "dialog",	// 弹出层类型
+                width: "500",
+                height: "300",
+                url: "addRole1"
+            });
+        });
+        var arr = [];
+
+        Array.prototype.range = function (start, end) {
+            var _self = this;
+            var length = end - start + 1;
+            var step = start - 1;
+            return Array.apply(null, {length: length}).map(function (v, i) {
+                step++;
+                return step;
+            });
+        }
+        for (let m in arr.range(1,7)) {
+            $("#l_"+m).click(function () {
+                var roleid=$("#h_"+m).val();
+                $.post("deleteRole",
+                    {roleid:roleid},
+                    function (data) {
+                        if (data.success){
+                            alert("删除成功");
+                            location.href="queryRole";
+                        }else{
+                            alert("网络异常");
+                        }
+                    },"json"
+                )
+            })
+        }
+    })
+</script>
+<script>
+    javaex.loading();
+</script>
+</html>

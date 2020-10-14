@@ -1,0 +1,224 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!--字体图标-->
+    <link href="/pc/css/icomoon.css" rel="stylesheet" />
+    <!--动画-->
+    <link href="/pc/css/animate.css" rel="stylesheet" />
+    <!--骨架样式-->
+    <link href="/pc/css/common.css" rel="stylesheet" />
+    <!--皮肤（缇娜）-->
+    <link href="/pc/css/skin/tina.css" rel="stylesheet" />
+    <!--jquery，不可修改版本-->
+    <script src="/pc/lib/jquery-1.7.2.min.js"></script>
+    <!--全局动态修改-->
+    <script src="/pc/js/common.js"></script>
+    <!--核心组件-->
+    <script src="/pc/js/javaex.min.js"></script>
+    <!--表单验证-->
+    <script src="/pc/js/javaex-formVerify.js"></script>
+    <title>Title</title>
+
+    <style>
+        .enlargeImg_wrapper {
+            display: none;
+            position: fixed;
+            z-index: 999;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: center;
+            background-color: rgba(52, 52, 52, 0.8);
+            background-size: 50%;
+        }
+        img:hover {
+            cursor: zoom-in;
+        }
+        .enlargeImg_wrapper:hover {
+            cursor: zoom-out;
+        }
+        body {font-family: Arial, Helvetica, sans-serif; font-size:12px; text-align:center;}
+        a { text-decoration: none;}
+        #all {widht: 100%; text-align:center; margin:auto;}
+        #main {width: 96%; line-height: 1.8; margin:auto; border:1px #ccc dashed; text-align: left; text-indent: 2em;}
+        #t1{height: 30px}
+    </style>
+    <script type="text/javascript" src="/js/jquery-1.11.1.min.js"></script>
+</head>
+<body>
+<!--主体内容-->
+
+<!--主体内容-->
+<div id="mmm" class="list-content">
+    <!--块元素-->
+    <div class="block">
+        <!--页面有多个表格时，可以用于标识表格-->
+        <h2>汽车信息</h2>
+        <!--右上角的返回按钮-->
+        <a href="javascript:history.back();">
+            <button id="b1" class="button indigo radius-3" style="position: absolute;right: 20px;top: 16px;"><span class="icon-arrow_back"></span> 返回</button>
+        </a>
+
+        <!--正文内容-->
+        <div class="main">
+            <!--表格上方的搜索操作-->
+            <div class="admin-search">
+                <div class="input-group">
+                    <form action="querycar" method="post" >
+                        <input id="t1" type="text" name="m" placeholder="请输入" required=" "  autocomplete="off"/>
+                        <input  type="submit" style="height: 30px;width:50px;background-color: #94DCEB;border-radius: 5px"; value="搜索"/>
+                    </form>
+                </div>
+            </div>
+
+            <!--表格上方的操作元素，添加、删除等-->
+            <div class="operation-wrap">
+                <div class="buttons-wrap">
+                        <a href="#" id="d1"><button style="background-color:skyblue;width: 70px;height: 35px;border-radius: 5px">添加汽车</button></a>
+                </div>
+            </div>
+            <table id="table" class="table color2">
+                <thead>
+                <tr>
+                    <th>品牌</th>
+                    <th>介绍</th>
+                    <th>类型</th>
+                    <th>上传人</th>
+                    <th>价格</th>
+                    <th>库存</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <span th:each="list,num:${car}">
+                    <tr id="h1">
+                        <td th:text="${list.carbrand}"></td>
+                        <td><img th:class="enlargeImg" th:src="@{/images/{carimg}(carimg=${list.carimg})}" title="点击查看大图" th:id="'ik_'+${num.count}" id="i_"${sessionScope.t} style="width: 50px" height="50" /></td>
+                        <td th:text="${list.cartype}">${list.car_type}</td>
+                        <td th:text="${list.carcreatename}">${list.car_create_name}</td>
+                        <td th:text="${list.carprice}+'万'">${list.car_price}万</td>
+                        <td th:text="${list.carstock}">${list.car_stock}</td>
+                        <input th:id="'i_'+${num.count}" id="i_${sessionScope.t}" name="${list.car_id}" style="display: none" th:value="${list.carid}"/>
+                        <input th:id="'k_'+${num.count}" id="k_${sessionScope.t}" name="${list.car_brand}" style="display: none" th:value="${list.carbrand}"/>
+                        <input th:id="'o_'+${num.count}" id="o_${sessionScope.t}" name="${list.car_img}" style="display: none" th:value="${list.carimg}"/>
+                        <input th:id="'t_'+${num.count}" id="t_${sessionScope.t}" name="${list.car_type}" style="display: none" th:value="${list.cartype}"/>
+                        <input th:id="'e_'+${num.count}" id="e_${sessionScope.t}" name="${list.car_price}" style="display: none" th:value="${list.carprice}"/>
+                        <input th:id="'y_'+${num.count}" id="y_${sessionScope.t}" name="${list.car_stock}" style="display: none" th:value="${list.carstock}"/>
+                        <td>
+                            <button th:id="'d_'+${num.count}" id="d_${sessionScope.t}"  style="background-color: tomato;width: 35px;height: 30px;border-radius: 5px">编辑</button>&nbsp;&nbsp;&nbsp;<button th:id="'l_'+${num.count}" id="l_${sessionScope.t}" style="background-color: greenyellow;width: 35px;height: 30px;border-radius: 5px">删除</button>
+                            </td>
+                    </tr>
+                </span>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div>
+        当前第<span th:text="${page1.pageNum}"></span> 页&nbsp;&nbsp;&nbsp;共<span th:text=" ${page1.pages}"></span></span> 页
+        <span th:if="${page1.pageNum!=1}">
+            &nbsp;&nbsp;<a id="a12"  href="#" th:href="@{'/querycar?page='+${page1.prePage}}">上一页</a>
+        </span>
+
+        <span th:if="${page1.pageNum<page1.pages}">
+            &nbsp;&nbsp;<a id="a11"  href="#" th:href="@{'/querycar?page='+${page1.nextPage}}">下一页</a>
+        </span>
+        <i style="text-align: right;float: right">共<span th:text="${page1.total}"></span> 条</i>
+    </div>
+</div>
+
+</div>
+</body>
+<script>
+    $(function () {
+
+        $("#d1").click(function () {
+            javaex.dialog({
+                type: "dialog",	// 弹出层类型
+                width: "500",
+                height: "500",
+                url: "addcar1"
+            });
+        });
+    });
+    $(function () {
+        enlargeImg();
+    })
+
+    //查看大图
+    function enlargeImg() {
+        $(".enlargeImg").click(function () {
+            $(this).after("<div onclick='closeImg()' class='enlargeImg_wrapper'></div>");
+            var imgSrc = $(this).attr('src');
+            $(".enlargeImg_wrapper").css("background-image", "url(" + imgSrc + ")");
+            $('.enlargeImg_wrapper').fadeIn(200);
+        })
+    }
+
+    //关闭并移除图层
+    function closeImg() {
+        $('.enlargeImg_wrapper').fadeOut(200).remove();
+    }
+    $(function () {
+        var arr = [];
+
+        Array.prototype.range = function ( start,end ){
+            var _self = this;
+            var length = end - start +1;
+            var step = start - 1;
+            return Array.apply(null,{length:length}).map(function (v,i){step++;return step;});
+        }
+        for (let m in  arr.range(1,5)) {
+            $("#d_" + m).click(function () {
+                var carid = $("#i_"+ m).val();
+                var carbrand = $("#k_" + m).val();
+                var carimg = $("#o_" + m).val();
+                var cartype = $("#t_" + m).val();
+                var carprice = $("#e_" + m).val();
+                var carstock = $("#y_" + m).val();
+                $.post("setcar",
+                    {
+                        carid: carid,
+                        carbrand: carbrand,
+                        carimg: carimg,
+                        cartype: cartype,
+                        carprice: carprice,
+                        carstock: carstock
+                    },
+                    function (data) {
+                        if (data.success){
+                            javaex.dialog({
+                                type: "dialog",	// 弹出层类型
+                                width: "500",
+                                height: "600",
+                                url: "setcar1"
+                            });
+                        }else {
+                            alert("获取失败")
+                        }
+                    },"json"
+                )
+
+            });
+            $("#l_" + m).click(function () {
+                var id = $("#i_" + m).val();
+                $.post("deletecar",
+                    {id: id},
+                    function (data) {
+                        if (data.success) {
+                            alert("删除成功")
+                            location.href = "querycar"
+                        }
+                    },"json"
+                )
+            })
+        }
+    })
+
+</script>
+<script>
+    javaex.loading();
+</script>
+</html>

@@ -1,0 +1,89 @@
+
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!--字体图标-->
+    <link href="/pc/css/icomoon.css" rel="stylesheet" />
+    <!--动画-->
+    <link href="/pc/css/animate.css" rel="stylesheet" />
+    <!--骨架样式-->
+    <link href="/pc/css/common.css" rel="stylesheet" />
+    <!--皮肤（缇娜）-->
+    <link href="/pc/css/skin/tina.css" rel="stylesheet" />
+    <!--jquery，不可修改版本-->
+    <script src="/pc/lib/jquery-1.7.2.min.js"></script>
+    <!--全局动态修改-->
+    <script src="/pc/js/common.js"></script>
+    <!--核心组件-->
+    <script src="/pc/js/javaex.min.js"></script>
+    <!--表单验证-->
+    <script src="/pc/js/javaex-formVerify.js"></script>
+    <title>Title</title>
+    <script type="text/javascript" src="/js/jquery-1.11.1.min.js"></script>
+    <script src="/js/jquery.cookie.js"></script>
+    <style>
+        a { text-decoration: none;}
+        #all {widht: 100%; text-align:center; margin:auto;}
+        #main {width: 96%; line-height: 1.8; margin:auto; border:1px #ccc dashed; text-align: left; text-indent: 2em;}
+        #m input{
+            width: 200px;height: 30px;}
+    </style>
+
+</head>
+<body>
+<div class="list-content">
+    <div class="block">
+        <h2>新建订单详情</h2>
+        <div class="operation-wrap">
+            <div class="buttons-wrap">
+                <form id="m" style="border: 1px lightgrey solid;text-align: center">
+                    <input id="h" type="text" style="display: none" th:value="${session.logid}"/>
+                    品牌：<input id="a_" style="margin: 20px" type="text" name="car_brand" required=" "/><br/>
+                    数量：<input id="a6" style="margin: 20px" type="text" name="car_stock" required=" "/><br/>
+                    <input id="a1" name="new"  type="button" value="新建" style="text-align:center;height: 35px;width: 50px;background-color: dodgerblue;color:white;border-radius: 5px;"/>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</body>
+<script>
+    $(function () {
+        $("#a_").blur(function () {
+            var car_brand = $("#a_").val();
+            $.post("log_brand",
+                {carbrand: car_brand},
+                function (data) {
+                    if (data.success) {
+                        return;
+                    } else {
+                        alert("该品牌为空或不存在");
+                    }
+                }, "json");
+        });
+    })
+    $(function () {
+        $("#a1").click(function () {
+            var car_brand=$("#a_").val();
+            var car_num=$("#a6").val();
+            var logid=$("#h").val();
+            $.post("addlog_l?logid",
+                {carbrand:car_brand,carnum:car_num},
+                function (data) {
+                    if(data.success){
+                        alert("创建成功");
+                        parent.location.href="querylog_l?logid="+logid;
+                    }else{
+                        alert("创建失败,不能为空");
+                    }
+                },"json"
+            )
+        })
+    })
+
+</script>
+<script>
+    javaex.loading();
+</script>
+</html>

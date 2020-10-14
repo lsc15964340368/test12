@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace => 命名空间-->
+<mapper namespace="com.oaec.car_text.dao.UserMapper">
+    <resultMap id="userMap" type="user">
+        <id property="id" column="id"></id>
+        <result property="username" column="username"/>
+        <result property="usercode" column="usercode"/>
+        <result property="password" column="password"/>
+        <result property="userstatus" column="userstatus"/>
+        <result property="userphone" column="userphone"/>
+        <result property="useraddress" column="useraddress"/>
+        <result property="salt" column="salt"/>
+        <collection property="roles" ofType="role">
+            <id property="roleid" column="roleid"></id>
+            <result property="rolename" column="rolename"/>
+            <result property="rolecode" column="rolecode"/>
+            <collection property="powers" ofType="power">
+                <id property="powerid" column="powerid"/>
+                <result property="powername" column="powername"/>
+                <result property="URL" column="URL"/>
+                <result property="powerpid" column="powerpid"/>
+            </collection>
+        </collection>
+    </resultMap>
+    <insert id="addUser" >
+        insert into user values(#{id},#{username},#{usercode},
+        #{password},#{userstatus},#{userphone},#{useraddress},
+        #{salt})
+    </insert>
+
+
+    <select id="queryUser" resultType="user">
+    select * from user
+    where usercode=#{param1}
+    and password=#{param2}
+</select>
+    <select id="username" parameterType="String" resultType="user">
+        select * from user where usercode=#{usercode}
+    </select>
+    <select id="queryAll" resultType="user">
+        select * from user
+    </select>
+    <select id="queryLike" resultType="user" parameterType="String">
+        select * from user
+        <where>
+            <choose>
+                <when test="_parameter!=null and _parameter!=''">
+                    and username like concat('%',#{m},'%') or userphone like concat('%',#{m},'%')
+                    or useraddress like concat('%',#{m},'%')
+                </when>
+                <otherwise>
+                    and 1=1
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+    <select id="phone" resultType="user" parameterType="String">
+        select * from user where userphone=#{phone}
+    </select>
+    <delete id="deleteuser" parameterType="String">
+        delete from user where id=#{id}
+    </delete>
+    <insert id="addlog_l">
+        insert into logl values (#{logid},#{carbrand},#{carprice},#{carnum});
+    </insert>
+    <update id="setUserStatus" >
+        update user set userstatus=#{userstatus} where id=#{id}
+    </update>
+    <select id="queryU" parameterType="String" resultType="user">
+        select * from user where id=#{id}
+    </select>
+    <update id="setpwd">
+        update user set password=#{password}  where id=#{id}
+    </update>
+    <select id="queryUserByName" parameterType="String" resultMap="userMap">
+        select u.*,r.*,p.*  from user
+        u join userrole ur
+        on u.id=ur.userid
+        join role r
+        on r.roleid=ur.roleid
+        join powerrole rp
+        on rp.roleid=r.roleid
+        join power p
+        on p.powerid=rp.powerid
+        where username=#{username}
+    </select>
+    <select id="queryusername" parameterType="String" resultType="String">
+        select username from user where usercode=#{usercode}
+    </select>
+    <insert id="adduserrole">
+        insert into userrole values (#{urid},#{userid},#{roleid})
+    </insert>
+    <update id="setuserrole" >
+        update userrole set roleid=#{roleid} where userid=#{userid}
+    </update>
+</mapper>

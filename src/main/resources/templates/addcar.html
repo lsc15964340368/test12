@@ -1,0 +1,88 @@
+
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!--字体图标-->
+    <link href="/pc/css/icomoon.css" rel="stylesheet" />
+    <!--动画-->
+    <link href="/pc/css/animate.css" rel="stylesheet" />
+    <!--骨架样式-->
+    <link href="/pc/css/common.css" rel="stylesheet" />
+    <!--皮肤（缇娜）-->
+    <link href="/pc/css/skin/tina.css" rel="stylesheet" />
+    <!--jquery，不可修改版本-->
+    <script src="/pc/lib/jquery-1.7.2.min.js"></script>
+    <!--全局动态修改-->
+    <script src="/pc/js/common.js"></script>
+    <!--核心组件-->
+    <script src="/pc/js/javaex.min.js"></script>
+    <!--表单验证-->
+    <script src="/pc/js/javaex-formVerify.js"></script>
+    <title>Title</title>
+    <script type="text/javascript" src="/js/jquery-1.11.1.min.js"></script>
+    <script src="/js/jquery.cookie.js"></script>
+    <style>
+        a { text-decoration: none;}
+        #all {widht: 100%; text-align:center; margin:auto;}
+        #main {width: 96%; line-height: 1.8; margin:auto; border:1px #ccc dashed; text-align: left; text-indent: 2em;}
+        #m input{
+            width: 200px;height: 30px;}
+    </style>
+
+</head>
+<body>
+<div class="list-content">
+    <div class="block">
+        <h2>添加汽车</h2>
+        <div class="operation-wrap">
+            <div class="buttons-wrap">
+                   <span th:if="${fileName}==null">
+                       <form enctype="multipart/form-data" action="upload" method="post">
+                           介绍： <input style="margin: 20px" name="file" type="file"/><br/>
+                           <input type="submit"/>
+                       </form>
+                   </span>
+                <span th:if="${fileName}!=null">
+                   介绍：已上传<span th:text="${fileName}"></span>
+                </span>
+                <form id="m" style="border: 1px lightgrey solid;text-align: center">
+                    品牌：<input id="a2" style="margin: 20px" type="text" name="car_brand"/><br/>
+                    <input id="a_3" th:value="${fileName}" style="display:none;"/>
+                    类型：<input id="a4" style="margin: 20px" type="text" name="car_type"/><br/>
+                    价格：<input id="a5" style="margin: 20px" type="text" name="car_price"/><br/>
+                    库存：<input id="a6" style="margin: 20px" type="text" name="car_stock"/><br/>
+                </form>
+                <button id="a1" style="text-align: center;height: 35px;width: 50px;background-color: dodgerblue;color:white;border-radius: 5px;">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</body>
+<script>
+    $(function () {
+        $("#a1").click(function () {
+
+            var carbrand=$("#a2").val();
+            var carimg=$("#a_3").val();
+            var cartype=$("#a4").val();
+            var carprice=$("#a5").val();
+            var carstock=$("#a6").val();
+            $.post("addcar",
+                {carbrand:carbrand,carimg:carimg,cartype:cartype,carprice:carprice,carstock:carstock},
+                function (data) {
+                    if (data.success){
+                        alert("添加成功");
+                        parent.location.href="querycar";
+                    }else{
+                        alert("添加失败");
+                    }
+                },"json"
+            )
+        });
+    });
+</script>
+<script>
+    javaex.loading();
+</script>
+</html>

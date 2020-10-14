@@ -1,0 +1,104 @@
+
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!--字体图标-->
+    <link href="/pc/css/icomoon.css" rel="stylesheet" />
+    <!--动画-->
+    <link href="/pc/css/animate.css" rel="stylesheet" />
+    <!--骨架样式-->
+    <link href="/pc/css/common.css" rel="stylesheet" />
+    <!--皮肤（缇娜）-->
+    <link href="/pc/css/skin/tina.css" rel="stylesheet" />
+    <!--jquery，不可修改版本-->
+    <script src="/pc/lib/jquery-1.7.2.min.js"></script>
+    <!--全局动态修改-->
+    <script src="/pc/js/common.js"></script>
+    <!--核心组件-->
+    <script src="/pc/js/javaex.min.js"></script>
+    <!--表单验证-->
+    <script src="/pc/js/javaex-formVerify.js"></script>
+    <title>Title</title>
+    <script type="text/javascript" src="/js/jquery-1.11.1.min.js"></script>
+    <script src="/js/jquery.cookie.js"></script>
+    <style>
+        a { text-decoration: none;}
+        #all {widht: 100%; text-align:center; margin:auto;}
+        #main {width: 96%; line-height: 1.8; margin:auto; border:1px #ccc dashed; text-align: left; text-indent: 2em;}
+        #m input{
+            width: 200px;height: 30px;}
+    </style>
+
+</head>
+<body>
+<div class="list-content">
+    <div class="block">
+        <h2>修改订单</h2>
+        <div class="operation-wrap">
+            <div class="buttons-wrap">
+                <form id="m" style="border: 1px lightgrey solid;text-align: center">
+                    <input id="a5" style="display: none" th:value="${session.setlog.logid}">
+                    用户：<input id="a2" style="margin: 20px" type="text" name="username" th:value="${session.setlog.logusername}"/><br/>
+                    <div style="margin-left: -28px">
+                        下单时间:&nbsp;&nbsp;&nbsp;<input type="text" id="date" class="ex-date" style="margin:20px;width: 180px;" th:value="${session.setlog.mdate}"  readonly/>
+                    </div><br/>
+                    <input  name="new" onclick="set();" type="submit" value="修改" style="height: 35px;width: 50px;background-color: dodgerblue;color:white;border-radius: 5px;"/>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</body>
+<script>
+    $(function () {
+        $("#a2").blur(function () {
+            var log_username=$("#a2").val();
+            $.post("log_username",
+                {logusername:log_username},
+                function (data) {
+                    if (data.success){
+                        return;
+                    } else{
+                        alert("该用户为空或不存在");
+                    }
+                },"json");
+        });
+    })
+    function set() {
+        var log_id=$("#a5").val();
+        var log_username=$("#a2").val();
+        var mdate=$("#date").val();
+        var array =  mdate.split("-");
+        var dt = new Date(array[0], array[1], array[2]);
+        var time=dt.getMonth();
+        dt.setMonth(time);
+        console.log(dt);
+        $.post("setlog3",
+            {logid:log_id,logusername:log_username,mdate:dt},
+            function (data) {
+                if(data.success){
+                    alert("修改成功");
+                    parent.location.href="querylog"
+                }else{
+                    alert("修改失败");
+                }
+            },"json"
+        )};
+    $(function () {
+        javaex.date({
+            id : "date",	// 承载日期组件的id
+            isTime : true,
+            date : "2020-07-25 00:00:00",	// 选择的日期
+            // 重新选择日期之后返回一个时间对象
+            callback : function(rtn) {
+                alert(rtn.date);
+            }
+        });
+    })
+</script>
+<script>
+    javaex.loading();
+</script>
+</html>
+
